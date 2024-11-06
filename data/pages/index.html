@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>HoneyMonitor.com Honeypot Proxy</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<script type="text/javascript">
+			const services = ["ftp", "ssh", "telnet", "smtp", "http", "pop3", "imap", "https", "smtps", "imaps", "pop3s", "socks5", "mysql", "rdp", "psql", "vnc"];
+
+			const predefined_profiles = {
+				"Linux (Bare)": [ "ssh" ],
+				"Linux (Interesting)": [ "ssh", "http", "https", "mysql", "vnc" ],
+				"Windows (Bare)": [ "rdp" ],
+				"Windows (Interesting)": [ "telnet", "rdp", "http", "https" ]
+			};
+
+			function load_profile(id) {
+				const profile = predefined_profiles[id];
+				for(const i in services)
+					document.getElementById(services[i]).checked = false;
+				for(const i in profile)
+					document.getElementById(profile[i]).checked = true;
+			}
+		</script>
+	</head>
+	<body>
+ 	<div class="container">
+		<h1 class="text-center">HoneyMonitor.com Honeypot Proxy</h1>
+			<form action="/" method="POST" class="form-horizontal" role="form">
+				<h2>Configuration</h2>
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">HoneyMonitor Network Key</label>
+					<div class="col-sm-9">
+						<input name="network_key" type="text" id="network_key" placeholder="Network Key" class="form-control" required="required" value="{network_key}" autofocus />
+						<small>Find it on your Network setup page.</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">HoneyMonitor Server IP</label>
+					<div class="col-sm-9">
+						<input name="server_ip" type="text" id="server_ip" placeholder="Server IP" class="form-control" required="required" value="{server_ip}" autofocus/>
+						<small>Find it on your Network setup page.</small>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="device" class="col-sm-3 control-label">Enabled Services</label>
+					<div class="col-sm-4">
+						<div>
+							<input name="ftp" type="checkbox" id="ftp" value="1" {ftp_checked} />
+							<label for="ftp">FTP (21)</label>
+						</div>
+						<div>
+							<input name="ssh" type="checkbox" id="ssh" value="1" {ssh_checked} />
+							<label for="ssh">SSH (22)</label>
+						</div>
+						<div>
+							<input name="telnet" type="checkbox" id="telnet" value="1" {telnet_checked} />
+							<label for="telnet">TELNET (23)</label>
+						</div>
+						<div>
+							<input name="smtp" type="checkbox" id="smtp" value="1" {smtp_checked} />
+							<label for="smtp">SMTP (25)</label>
+						</div>
+						<div>
+							<input name="http" type="checkbox" id="http" value="1" {http_checked} />
+							<label for="http">HTTP (80)</label>
+						</div>
+						<div>
+							<input name="pop3" type="checkbox" id="pop3" value="1" {pop3_checked} />
+							<label for="pop3">POP3 (110)</label>
+						</div>
+						<div>
+							<input name="imap" type="checkbox" id="imap" value="1" {imap_checked} />
+							<label for="imap">IMAP (143)</label>
+						</div>
+						<div>
+							<input name="https" type="checkbox" id="https" value="1" {https_checked} />
+							<label for="https">HTTPS (443)</label>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div>
+							<input name="smtps" type="checkbox" id="smtps" value="1" {smtps_checked} />
+							<label for="smtps">SMTPS (465)</label>
+						</div>
+						<div>
+							<input name="imaps" type="checkbox" id="imaps" value="1" {imaps_checked} />
+							<label for="imaps">IMAPS (993)</label>
+						</div>
+						<div>
+							<input name="pop3s" type="checkbox" id="pop3s" value="1" {pop3s_checked} />
+							<label for="pop3s">POP3S (995)</label>
+						</div>
+						<div>
+							<input name="socks5" type="checkbox" id="socks5" value="1" {socks5_checked} />
+							<label for="socks5">Socks5 (1080)</label>
+						</div>
+						<div>
+							<input name="mysql" type="checkbox" id="mysql" value="1" {mysql_checked} />
+							<label for="mysql">MySQL (3306)</label>
+						</div>
+						<div>
+							<input name="rdp" type="checkbox" id="rdp" value="1" {rdp_checked} />
+							<label for="rdp">RDP (3389)</label>
+						</div>
+						<div>
+							<input name="psql" type="checkbox" id="psql" value="1" {psql_checked} />
+							<label for="psql">PSQL (5432)</label>
+						</div>
+						<div>
+							<input name="vnc" type="checkbox" id="vnc" value="1" {vnc_checked} />
+							<label for="vnc">VNC (5900)</label>
+						</div>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					<div class="col-sm-6">
+						<hr/>
+						<select onchange="load_profile(this.value)" class="form-control">
+							<option selected disabled>Load predefined profile</option>
+							<script type="text/javascript">
+								for(const s in predefined_profiles)
+									document.write("<option>" + s + "</option>")
+							</script>
+						</select>
+					</div>
+				</div>
+
+				<hr />
+				<h2>Admin Interface</h2>
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">Port</label>
+					<div class="col-sm-9">
+						<input name="http_port" type="number" min="10000" max="60000" id="http_port" placeholder="Enter port" class="form-control" required="required" value="{http_port}" autofocus/>
+						<small>Use a number between 10000 and 60000, after settings You'll access http://[ip]:[number you enter above] to reach this interface.</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">Username</label>
+					<div class="col-sm-9">
+						<input name="http_username" type="text" id="http_username" placeholder="" class="form-control" required="required" value="{http_username}" autofocus/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">Password</label>
+					<div class="col-sm-9">
+						<input name="http_password" type="password" id="http_password" placeholder="" class="form-control" required="required" value="{http_password}" autofocus/>
+					</div>
+				</div>
+
+				<hr />
+				<h2>Wi-Fi Network</h2>
+
+				<div class="form-group">
+					<label for="device" class="col-sm-3 control-label">Hostname</label>
+					<div class="col-sm-9">
+						<input name="wifi_hostname" type="text" id="wifi_hostname" placeholder="Hostname" class="form-control" required="required" value="{wifi_hostname}" autofocus/>
+						<small>Pick something interesting for an attacker (e.g.: main-server, web-server, domain-controller, etc.).</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="wifi_ssid" class="control-label">Wi-Fi Network</label>
+					<div>
+						{networks}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="password" class="control-label">Wi-Fi Password</label>
+					<div>
+						<input	name="wifi_password" type="password" id="wifi_password" placeholder="Password" class="form-control">
+					</div>
+				</div>
+				<hr />
+				<div class="form-group">
+					<div>
+						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+						<input type="hidden" name="action" value="updatesettings">
+					</div>
+				</div>
+			</form>
+ 		</div>
+	</body>
+</html>
